@@ -35,7 +35,7 @@ var arraySum = function(array) {
      } else {
          sum += array[i];
      }   
-  }
+   }
  return sum;
 };
 //console.log(arraySum([1,[2,3],[[4]],5]));
@@ -58,7 +58,6 @@ var isEven = function(n) {
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
-    
     if (n === 0){
         return 0;
     } else if (n < 0){
@@ -126,7 +125,7 @@ var reverse = function(string) {
     if (string.length===1) return string;
     return reverse(string.slice(1)) + string[0];
 };
-console.log(reverse("monkey"));
+//console.log(reverse("monkey"));
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
@@ -140,15 +139,39 @@ var palindrome = function(string) {
     }
     return false;
 };
-console.log(palindrome('racecar'))
+//console.log(palindrome('racecar'))
 
 // 11. Write a function that returns the remainder of x divided by y without using the
 // modulo (%) operator.
 // modulo(5,2) // 1
 // modulo(17,5) // 2
 // modulo(22,6) // 4
-// var modulo = function(x, y) {
-// };
+var modulo = function(x, y) {
+    if(x < 0 && y < 0){
+        x = -x;
+        y = -y;
+        return -modulo(x, y)
+    }
+    if(y < 0){
+        y = -y;
+        return -modulo(x, y);
+    } 
+    if(x < 0){
+        
+    }
+    if(x === 0){
+        return NaN;
+    }
+    if(x < y){
+        return x
+    }
+    if(y === 1){
+        return 0
+    }
+    x -= y;
+    return modulo(x, y);
+};
+//console.log(modulo(-500,-499));
 
 // 12. Write a function that multiplies two numbers without using the * operator  or
 // JavaScript's Math object.
@@ -165,16 +188,32 @@ var multiply = function(x, y) {
 
 // 13. Write a function that divides two numbers without using the / operator  or
 // JavaScript's Math object.
-// var divide = function(x, y) {
-// };
+var divide = function(x, y) {
+    if(x < y){
+        return 0
+    }
+    if(x ===0 && y === 0){
+        return NaN;
+    }
+    if(y < 0){
+        return -divide(x + y, y)
+    }
+    return 1 + divide(x - y, y);
+};
+//console.log(divide(17,5))
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers.  The GCD of two
 // integers is the greatest integer that divides both x and y with no remainder.
 // Example:  gcd(4,36);  // 4
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
-// var gcd = function(x, y) {
-// };
+var gcd = function(x, y) {
+
+    if(x === 0 || y === 0){
+        return 0;
+    }
+
+};
 
 // 15. Write a function that compares each character of two strings and returns true if
 // both are identical.
@@ -263,20 +302,51 @@ var rMap = function(array, callback) {
 // var testobj = {'e': {'x':'y'}, 't':{'r': {'e':'r'}, 'p': {'y':'r'}},'y':'e'};
 // countKeysInObj(testobj, 'r') // 1
 // countKeysInObj(testobj, 'e') // 2
-// var countKeysInObj = function(obj, key) {
-// };
+var countKeysInObj = function(obj, key) {
+    var array = Array.from(arguments)[2] || [];
+    if(obj.hasOwnProperty(key)){
+        array.push(key);
+    }
+    for(var k in obj){   
+        if(typeof obj[k] === 'object'){
+            countKeysInObj(obj[k], key, array)
+        }
+    }
+    return array.length;
+};
+//console.log(countKeysInObj({'e': {'x':'y'}, 't':{'r': {'e':'r'}, 'p': {'y':'r'}},'y':'e'}, 'e'));
 
 // 22. Write a function that counts the number of times a value occurs in an object.
 // var testobj = {'e': {'x':'y'}, 't':{'r': {'e':'r'}, 'p': {'y':'r'}},'y':'e'};
 // countValuesInObj(testobj, 'r') // 2
 // countValuesInObj(testobj, 'e') // 1
-// var countValuesInObj = function(obj, value) {
-// };
+var countValuesInObj = function(obj, value) {
+    var sum = 0;
+    for(var key in obj){
+        if(obj[key] === value){
+            sum += 1;
+        }
+        if(typeof obj[key] === 'object'){
+            sum += countValuesInObj(obj[key], value);
+        }
+    }
+    return sum;
+};
 
 // 23. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
-// var replaceKeysInObj = function(obj, key, newKey) {
-// };
+var replaceKeysInObj = function(obj, key, newKey) {
+    for(var mykey in obj){
+        if(obj[key]){
+            obj[newKey] = obj[key];
+            delete obj[key];
+        }
+        if(typeof obj[mykey] === 'object'){
+            replaceKeysInObj(obj[mykey], key, newKey);
+        }
+    }
+    return obj;
+};
 
 // 24. Get the first n Fibonacci numbers.  In the Fibonacci Sequence, each subsequent
 // number is the sum of the previous two.
@@ -358,13 +428,34 @@ var capitalizeFirst = function(array) {
 //   e: {e: {e: 2}, ee: 'car'}
 // };
 // nestedEvenSum(obj1); // 10
-// var nestedEvenSum = function(obj) {
-// };
+var nestedEvenSum = function(obj) {
+    var sum = 0;
+    for(var key in obj){
+        if(obj[key]%2 === 0){
+            sum += obj[key];
+        }
+        if(typeof obj[key] === 'object'){
+            sum += nestedEvenSum(obj[key]);
+        }
+    }
+    return sum;
+};
 
 // 29. Flatten an array containing nested arrays.
 // Example: flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
-// var flatten = function(arrays) {
-// };
+var flatten = function(arrays) {
+    var i = Array.from(arguments)[2] || 0;
+    var result = Array.from(arguments)[1] || [];
+    if(i === arrays.length){
+      return result;
+    }
+    if(Array.isArray(arrays[i])){
+      flatten(arrays[i], result);
+    } else {
+      result.push(arrays[i]);
+    }
+    return flatten(arrays, result, ++i);
+};
 
 // 30. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {'p':1, 'o':2, 't':2, 'a':1}
@@ -404,8 +495,16 @@ var compress = function(list) {
 // 32. Augument every element in a list with a new value where each element is an array
 // itself.
 // Example: augmentElements([[],[3],[7]], 5); // [[5],[3,5],[7,5]]
-// var augmentElements = function(array, aug) {
-// };
+var augmentElements = function(array, aug) {
+    var i = Array.from(arguments)[2] || 0;
+    if(i === array.length){
+        return array;
+    }
+    if(Array.isArray(array[i])){
+        array[i].push(aug);
+    }
+    return augmentElements(array, aug, ++i);
+};
 
 // 33. Reduce a series of zeroes to a single 0.
 // minimizeZeroes([2,0,0,0,1,4]) // [2,0,1,4]
@@ -434,9 +533,7 @@ var alternateSign = function(array) {
     var newArr = Array.from(arguments)[2] || [];
     if(i === array.length){
         return newArr;
-    }
-   
-    
+    } 
 };
 //console.log(alternateSign([-2,-7,8,3,-1,4]));
 
@@ -463,18 +560,18 @@ var numToText = function(str) {
 // *** EXTRA CREDIT ***
 
 // 36. Return the number of times a tag occurs in the DOM.
-// var tagCount = function(tag, node) {
-// };
+var tagCount = function(tag, node) {
+};
 
 // 37. Write a function for binary search.
 // Sample array:  [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 // console.log(binarySearch(5)) will return '5'
 
-// var binarySearch = function(array, target, min, max) {
-// };
+var binarySearch = function(array, target, min, max) {
+};
 
 // 38. Write a merge sort function.
 // Sample array:  [34,7,23,32,5,62]
 // Sample output: [5,7,23,32,34,62]
-// var mergeSort = function(array) {
-// };
+var mergeSort = function(array) {
+};
