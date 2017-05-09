@@ -147,6 +147,9 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+    if(x === 0 && y === 0){
+        return NaN;
+    }
     if(x < 0 && y < 0){
         x = -x;
         y = -y;
@@ -156,11 +159,9 @@ var modulo = function(x, y) {
         y = -y;
         return -modulo(x, y);
     } 
-    if(x < 0){
-        
-    }
-    if(x === 0){
-        return NaN;
+    if(x < 0 && -x > y){
+        x = -x
+        return modulo(x,y)
     }
     if(x < y){
         return x
@@ -208,12 +209,16 @@ var divide = function(x, y) {
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
 var gcd = function(x, y) {
-
-    if(x === 0 || y === 0){
-        return 0;
+    if(x < 0 || y < 0){
+        return null;
     }
-
+    if (y) {
+        return gcd(y, x % y);
+    } else {
+        return x;
+    }
 };
+console.log(gcd(4,36))
 
 // 15. Write a function that compares each character of two strings and returns true if
 // both are identical.
@@ -529,11 +534,16 @@ var minimizeZeroes = function(array) {
 // alternateSign([2,7,8,3,1,4]) // [2,-7,8,-3,1,-4]
 // alternateSign([-2,-7,8,3,-1,4]) // [2,-7,8,-3,1,-4]
 var alternateSign = function(array) {
-    var i = Array.from(arguments)[1] || 1;
-    var newArr = Array.from(arguments)[2] || [];
+    var i = Array.from(arguments)[1] || 0;
     if(i === array.length){
-        return newArr;
+        return array;
     } 
+    if(i%2 === 0){
+        array[i] = Math.abs(array[i])
+    } else {
+        array[i] = -Math.abs(array[i]);
+    }
+    return alternateSign(array, ++i)
 };
 //console.log(alternateSign([-2,-7,8,3,-1,4]));
 
