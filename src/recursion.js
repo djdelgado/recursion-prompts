@@ -218,7 +218,7 @@ var gcd = function(x, y) {
         return x;
     }
 };
-console.log(gcd(4,36))
+//console.log(gcd(4,36))
 
 // 15. Write a function that compares each character of two strings and returns true if
 // both are identical.
@@ -570,7 +570,15 @@ var numToText = function(str) {
 // *** EXTRA CREDIT ***
 
 // 36. Return the number of times a tag occurs in the DOM.
-var tagCount = function(tag, node) {
+var tagCount = function(tag, node, i = 0, count = 0) {
+    node = document.all;
+    if(i === node.length){
+        return count;
+    }
+    if(tag.toUpperCase() === node[i].tagName){
+        count++
+    }
+    return tagCount(tag, node, ++i, count);
 };
 
 // 37. Write a function for binary search.
@@ -578,10 +586,41 @@ var tagCount = function(tag, node) {
 // console.log(binarySearch(5)) will return '5'
 
 var binarySearch = function(array, target, min, max) {
+    min = min || 0;
+    max = max || array.length -1;
+    var mid = Math.floor((max + min)/2) ;
+    if(array[mid] === target){
+        return mid;
+    }
+    if(min === max){
+        return null;
+    }
+    if(target < array[mid]){
+        max = mid;
+        return binarySearch(array, target, min, max);
+    } else {
+        min = mid+1;
+        return binarySearch(array, target, min, max);
+    }
 };
 
 // 38. Write a merge sort function.
 // Sample array:  [34,7,23,32,5,62]
 // Sample output: [5,7,23,32,34,62]
 var mergeSort = function(array) {
+    var newArr = Array.from(arguments)[1] || array.slice();
+    var sorted = Array.from(arguments)[2] || [];
+    var smallest = Infinity;
+    if(array.length === sorted.length){
+        return sorted;
+    }
+    for(var i = 0; i < newArr.length; i++){
+        if(newArr[i] < smallest){
+            smallest = newArr[i];
+        }
+    }
+    sorted.push(smallest);
+    newArr.splice(newArr.indexOf(smallest),1);
+    return mergeSort(array, newArr, sorted);
 };
+//console.log(mergeSort([34,7,23,32,5,62]));
